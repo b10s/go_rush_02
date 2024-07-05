@@ -2,6 +2,7 @@ package piscine
 
 import (
 	"fmt"
+	"ft"
 	"os"
 )
 
@@ -54,6 +55,32 @@ func Ft_solve(fileName string) {
 		fmt.Println("~~~~")
 	}
 
+	emptyBoard := [][]byte{}
+	for i := 0; i < 4; i++ {
+		emptyBoard = append(emptyBoard, []byte{})
+		for j := 0; j < 4; j++ {
+			emptyBoard[i] = append(emptyBoard[i], '.')
+		}
+	}
+
+	printBoard(emptyBoard)
+	fmt.Println("~~~")
+
+	//emptyBoard = boardPlusPlus(emptyBoard)
+
+	//printBoard(emptyBoard)
+	//fmt.Println("~~~")
+
+	//
+	// increase board until it solved
+	for {
+		if solve(emptyBoard, tets, 0) {
+			break
+		}
+		emptyBoard = boardPlusPlus(emptyBoard)
+	}
+	//
+
 	// create a smallest board: 2x2
 	// try to put first one here, second, etc until can put something
 	// to put element onto board use function
@@ -71,6 +98,70 @@ func Ft_solve(fileName string) {
 	// recursion with deept == len(pieces/Tetrimino)
 	// board is copied and passed to inner call
 	// when we fit all - we solved! it must be gready solution
+}
+
+func solve(b [][]byte, tets []Tetrimino, idx int) bool {
+	// solved
+	if idx >= len(tets) {
+		fmt.Println("solved!!!")
+		printBoard(b)
+		return true
+	}
+
+	t := tets[idx]
+	for i := 0; i < len(b); i++ {
+		for j := 0; j < len(b[0]); j++ {
+			nb, err := putOnBrd(b, t, i, j)
+			if err == false {
+				//fmt.Println(string('A' + idx ) + ": able to put at", i, j)
+				//printBoard(nb)
+				if solve(nb, tets, idx+1) {
+					return true
+				}
+			} else {
+				//fmt.Println(string('A' + idx ) + ": unable at", i, j)
+			}
+		}
+	}
+	return false
+}
+
+func putOnBrd(b [][]byte, t Tetrimino, ii, jj int) ([][]byte, bool) {
+	nb := [][]byte{}
+	for i := 0; i < len(b); i++ {
+		nb = append(nb, []byte{})
+		for j := 0; j < len(b[i]); j++ {
+			nb[i] = append(nb[i], b[i][j])
+		}
+	}
+
+	// tet's height overfows
+	if ii+len(t.data) > len(b) {
+		return nb, true
+	}
+
+	// tet's width overflows
+	if jj+len(t.data[0]) > len(b[0]) {
+		return nb, true
+	}
+
+	for i := 0; i < len(t.data); i++ {
+		for j := 0; j < len(t.data[i]); j++ {
+			// we can put any tet part here
+			if nb[ii+i][jj+j] == '.' {
+				nb[ii+i][jj+j] = t.data[i][j]
+			} else if nb[ii+i][jj+j] != '.' && t.data[i][j] == '.' {
+				// noop //
+				// O  O //
+				//  \\\ //
+				//nb[ii+i][jj+j] = t.data[i][j]
+			} else {
+				return nb, true
+			}
+		}
+	}
+
+	return nb, false
 }
 
 func parseData(data []byte) []Tetrimino {
@@ -157,4 +248,24 @@ func nameTet(t Tetrimino, letter rune) Tetrimino {
 		newTet.data = append(newTet.data, line)
 	}
 	return newTet
+}
+
+func printBoard(board [][]byte) {
+	for i := 0; i < len(board); i++ {
+		for j := 0; j < len(board[0]); j++ {
+			ft.PrintRune(rune(board[i][j]))
+		}
+		ft.PrintRune('\n')
+	}
+}
+
+func boardPlusPlus(board [][]byte) [][]byte {
+	res := [][]byte{}
+	for i := 0; i <= len(board); i++ {
+		res = append(res, []byte{})
+		for j := 0; j <= len(board[0]); j++ {
+			res[i] = append(res[i], '.')
+		}
+	}
+	return res
 }
