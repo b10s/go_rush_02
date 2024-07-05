@@ -23,8 +23,5 @@ func main() {
 		return
 	}
 
-	ft_solve(fileName)
-}
-
-func ft_solve(fileName string) {
+	piscine.Ft_solve(fileName)
 }
