@@ -1,5 +1,7 @@
 go.mod
 *.swp
+*.tmp
+*.vscode
 impossible.fillit
 sample.fillit
 test.fillit

@@ -112,9 +112,9 @@ open no_existing_file: no such file or directory"
 
 
 # size of each map
-echo "\n\n	\033[101m  CATEGORY 0.2  LENGTH OF EACH MAP  	\033[m"
+echo "\n\n	\033[101m  CATEGORY 0.2  HEIGHT OF EACH MAP  	\033[m"
 
-run_test 20 "go run . invalid_length.fillit" "error\n"
+run_test 20 "go run . invalid_height.fillit" "error\n"
 
 
 echo "\n\n	\033[101m  CATEGORY 0.3  WIDTH OF EACH MAP  	\033[m"
