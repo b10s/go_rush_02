@@ -1,7 +1,6 @@
 package piscine
 
 import (
-	"fmt"
 	"ft"
 	"os"
 )
@@ -18,60 +17,34 @@ type Tetrimino struct {
 func Ft_solve(fileName string) {
 	data, err := os.ReadFile(fileName)
 	if err != nil {
-		// make error the same everywhere
-		fmt.Println("Error readfile")
-		//remove me
-		fmt.Println(err)
+		Ft_PrintErr()
 		return
 	}
 
-	// do we need check if there is errors during parse once more ?
 	rawTets := parseData(data)
-	fmt.Println("found ", len(rawTets), "tetriminos")
 
 	unnamedTets := []Tetrimino{}
 	for _, t := range rawTets {
 		unnamedTets = append(unnamedTets, minimizeTet(t))
 	}
 
-	//for _, t := range unnamedTets {
-	//PrintTetrimino(t)
-	//fmt.Println("~~~~")
-	//}
-
 	// use A, B, C, ... etc instead of #
 	// max # of tetriminos is 26, so we are safe
-
 	tets := []Tetrimino{}
 	letter := 'A'
 	for _, t := range unnamedTets {
 		tets = append(tets, nameTet(t, letter))
-		//PrintTetrimino(tets[i])
 		letter++
 	}
 
-	for _, t := range tets {
-		PrintTetrimino(t)
-		fmt.Println("~~~~")
-	}
-
 	emptyBoard := [][]byte{}
-	for i := 0; i < 4; i++ {
+	for i := 0; i < 2; i++ {
 		emptyBoard = append(emptyBoard, []byte{})
-		for j := 0; j < 4; j++ {
+		for j := 0; j < 2; j++ {
 			emptyBoard[i] = append(emptyBoard[i], '.')
 		}
 	}
 
-	printBoard(emptyBoard)
-	fmt.Println("~~~")
-
-	//emptyBoard = boardPlusPlus(emptyBoard)
-
-	//printBoard(emptyBoard)
-	//fmt.Println("~~~")
-
-	//
 	// increase board until it solved
 	for {
 		if solve(emptyBoard, tets, 0) {
@@ -79,31 +52,11 @@ func Ft_solve(fileName string) {
 		}
 		emptyBoard = boardPlusPlus(emptyBoard)
 	}
-	//
-
-	// create a smallest board: 2x2
-	// try to put first one here, second, etc until can put something
-	// to put element onto board use function
-	// keep map with elements already used so we can skip while iterationg over array
-
-	// board is a slice
-	// make function to make board bigger
-	// make function to check if board if full?
-	// iterate over all and try to put into board
-	// trying to put into board function (try it over all possible squares on current board
-
-	// take a piece try to put on each point of the board in a loop
-	// take second piece and try to put it on each square in a loop
-	// ..
-	// recursion with deept == len(pieces/Tetrimino)
-	// board is copied and passed to inner call
-	// when we fit all - we solved! it must be gready solution
 }
 
 func solve(b [][]byte, tets []Tetrimino, idx int) bool {
 	// solved
 	if idx >= len(tets) {
-		fmt.Println("solved!!!")
 		printBoard(b)
 		return true
 	}
@@ -113,13 +66,11 @@ func solve(b [][]byte, tets []Tetrimino, idx int) bool {
 		for j := 0; j < len(b[0]); j++ {
 			nb, err := putOnBrd(b, t, i, j)
 			if err == false {
-				//fmt.Println(string('A' + idx ) + ": able to put at", i, j)
-				//printBoard(nb)
 				if solve(nb, tets, idx+1) {
 					return true
 				}
 			} else {
-				//fmt.Println(string('A' + idx ) + ": unable at", i, j)
+				// do nothing, tea time ;)
 			}
 		}
 	}
@@ -186,13 +137,15 @@ func parseData(data []byte) []Tetrimino {
 		}
 		prev = b
 	}
-	tets = append(tets, t)
+	if len(t.data) > 0 {
+		tets = append(tets, t)
+	}
 	return tets
 }
 
 func PrintTetrimino(tet Tetrimino) {
 	for _, s := range tet.data {
-		fmt.Println(s)
+		Ft_PutStrLn(s)
 	}
 }
 
