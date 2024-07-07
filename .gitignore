@@ -6,3 +6,5 @@ go.mod
 invalid_extension
 run_tests.sh
 tests/
+.DS_Store
+*.swo
