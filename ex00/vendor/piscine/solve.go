@@ -23,16 +23,16 @@ func Ft_solve(fileName string) {
 
 	rawTets := parseData(data)
 
-	unnamedTets := []Tetrimino{}
+	cleanedTets := []Tetrimino{}
 	for _, t := range rawTets {
-		unnamedTets = append(unnamedTets, minimizeTet(t))
+		cleanedTets = append(cleanedTets, minimizeTet(t))
 	}
 
 	// use A, B, C, ... etc instead of #
 	// max # of tetriminos is 26, so we are safe
 	tets := []Tetrimino{}
 	letter := 'A'
-	for _, t := range unnamedTets {
+	for _, t := range cleanedTets {
 		tets = append(tets, nameTet(t, letter))
 		letter++
 	}
