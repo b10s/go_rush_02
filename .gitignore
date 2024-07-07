@@ -1,5 +1,8 @@
 go.mod
 *.swp
+*.tmp
+*.vscode
 *.fillit
 invalid_extension
 run_tests.sh
+tests/
