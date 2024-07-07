@@ -1,3 +1,5 @@
 go.mod
 *.swp
 *.fillit
+invalid_extension
+run_tests.sh
