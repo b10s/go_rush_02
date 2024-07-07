@@ -23,3 +23,7 @@ func Ft_PutStrLn(s string) {
 func Ft_PutUsage() {
 	Ft_PutStr(longLongUsage)
 }
+
+func Ft_PrintErr() {
+	Ft_PutStrLn("error")
+}
