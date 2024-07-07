@@ -10,6 +10,7 @@ func Ft_ValidateInput(fileName string) bool {
 		return false
 	}
 
+
 	return true
 }
 

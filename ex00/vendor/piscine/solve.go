@@ -22,6 +22,11 @@ func Ft_solve(fileName string) {
 	}
 
 	rawTets := parseData(data)
+	// impossible for this algorithm
+	if len(rawTets) >26 {
+		Ft_PrintErr()
+		return
+	}
 
 	cleanedTets := []Tetrimino{}
 	for _, t := range rawTets {
