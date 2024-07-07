@@ -102,10 +102,7 @@ func putOnBrd(b [][]byte, t Tetrimino, ii, jj int) ([][]byte, bool) {
 			if nb[ii+i][jj+j] == '.' {
 				nb[ii+i][jj+j] = t.data[i][j]
 			} else if nb[ii+i][jj+j] != '.' && t.data[i][j] == '.' {
-				// noop //
-				// O  O //
-				//  \\\ //
-				//nb[ii+i][jj+j] = t.data[i][j]
+				// do nothing, tea time ;)
 			} else {
 				return nb, true
 			}
@@ -222,3 +219,4 @@ func boardPlusPlus(board [][]byte) [][]byte {
 	}
 	return res
 }
+
