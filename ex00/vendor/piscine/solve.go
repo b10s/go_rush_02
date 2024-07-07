@@ -21,7 +21,11 @@ func Ft_solve(fileName string) {
 		return
 	}
 
-	rawTets := parseData(data)
+	rawTets, ok := parseData(data)
+	if !ok {
+		Ft_PrintErr()
+		return
+	}
 	// impossible for this algorithm
 	if len(rawTets) >26 {
 		Ft_PrintErr()
@@ -117,7 +121,7 @@ func putOnBrd(b [][]byte, t Tetrimino, ii, jj int) ([][]byte, bool) {
 	return nb, false
 }
 
-func parseData(data []byte) []Tetrimino {
+func parseData(data []byte) ([]Tetrimino, bool) {
 	tets := []Tetrimino{}
 	var t Tetrimino
 	line := ""
@@ -125,10 +129,15 @@ func parseData(data []byte) []Tetrimino {
 	prev = 46
 	for _, b := range data {
 		if b == 10 {
+			if len(line) != 4 && len(line) != 0 {
+				return []Tetrimino{}, false
+			}
 			if prev == 10 {
 				tets = append(tets, t)
 				t = Tetrimino{}
 			} else {
+				// here I cut a bit tet
+				// to not include it's empty valid lines
 				if !isEmptyLine(line) {
 					t.data = append(t.data, line)
 				}
@@ -142,7 +151,7 @@ func parseData(data []byte) []Tetrimino {
 	if len(t.data) > 0 {
 		tets = append(tets, t)
 	}
-	return tets
+	return tets, true
 }
 
 func PrintTetrimino(tet Tetrimino) {
