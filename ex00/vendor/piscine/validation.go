@@ -1,13 +1,10 @@
 package piscine
 
-//TODO: remove fmt
 import (
 	"os"
-	"fmt"
 )
 
 func Ft_ValidateInput(fileName string) bool {
-	fmt.Println("validation ...")
 
 	data, err := os.ReadFile(fileName)
 	if err != nil {
