@@ -21,18 +21,27 @@ func Ft_solve(fileName string) {
 		return
 	}
 
-	rawTets := parseData(data)
+	rawTets, ok := parseData(data)
+	if !ok {
+		Ft_PrintErr()
+		return
+	}
+	// impossible for this algorithm
+	if len(rawTets) >26 {
+		Ft_PrintErr()
+		return
+	}
 
-	unnamedTets := []Tetrimino{}
+	cleanedTets := []Tetrimino{}
 	for _, t := range rawTets {
-		unnamedTets = append(unnamedTets, minimizeTet(t))
+		cleanedTets = append(cleanedTets, minimizeTet(t))
 	}
 
 	// use A, B, C, ... etc instead of #
 	// max # of tetriminos is 26, so we are safe
 	tets := []Tetrimino{}
 	letter := 'A'
-	for _, t := range unnamedTets {
+	for _, t := range cleanedTets {
 		tets = append(tets, nameTet(t, letter))
 		letter++
 	}
@@ -102,10 +111,7 @@ func putOnBrd(b [][]byte, t Tetrimino, ii, jj int) ([][]byte, bool) {
 			if nb[ii+i][jj+j] == '.' {
 				nb[ii+i][jj+j] = t.data[i][j]
 			} else if nb[ii+i][jj+j] != '.' && t.data[i][j] == '.' {
-				// noop //
-				// O  O //
-				//  \\\ //
-				//nb[ii+i][jj+j] = t.data[i][j]
+				// do nothing, tea time ;)
 			} else {
 				return nb, true
 			}
@@ -115,7 +121,7 @@ func putOnBrd(b [][]byte, t Tetrimino, ii, jj int) ([][]byte, bool) {
 	return nb, false
 }
 
-func parseData(data []byte) []Tetrimino {
+func parseData(data []byte) ([]Tetrimino, bool) {
 	tets := []Tetrimino{}
 	var t Tetrimino
 	line := ""
@@ -123,10 +129,15 @@ func parseData(data []byte) []Tetrimino {
 	prev = 46
 	for _, b := range data {
 		if b == 10 {
+			if len(line) != 4 && len(line) != 0 {
+				return []Tetrimino{}, false
+			}
 			if prev == 10 {
 				tets = append(tets, t)
 				t = Tetrimino{}
 			} else {
+				// here I cut a bit tet
+				// to not include it's empty valid lines
 				if !isEmptyLine(line) {
 					t.data = append(t.data, line)
 				}
@@ -140,7 +151,7 @@ func parseData(data []byte) []Tetrimino {
 	if len(t.data) > 0 {
 		tets = append(tets, t)
 	}
-	return tets
+	return tets, true
 }
 
 func PrintTetrimino(tet Tetrimino) {
@@ -222,3 +233,4 @@ func boardPlusPlus(board [][]byte) [][]byte {
 	}
 	return res
 }
+
